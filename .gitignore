@@ -6,7 +6,6 @@ venv/
 
 # Environment variables
 .env
-.env.*
 
 # Testing
 .pytest_cache/
