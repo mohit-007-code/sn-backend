@@ -1,2 +1,25 @@
-.venv
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Environment variables
 .env
+.env.*
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Code quality
+.ruff_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
