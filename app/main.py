@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.db.session import engine
+from app.api.router import api_router
 
 @asynccontextmanager
 async def liespan(app: FastAPI):
@@ -13,6 +14,11 @@ app = FastAPI(
     title="Socail Platform API",
     description="A Production-oriented social medai platform.",
     version="0.1.0",
+)
+
+app.include_router(
+    api_router,
+    prefix="/api/v1",
 )
 
 @app.get("/health", tags=["Health"])
