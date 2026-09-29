@@ -5,6 +5,7 @@ from app.core.security import create_access_token, hash_password, verify_passwor
 from app.modules.auth.models import User
 from app.modules.auth.schemas import LoginRequest, RegisterRequest
 from app.modules.auth.repository import UserRepository
+from app.modules.users.models import UserProfile
 
 class AuthService:
     def __init__(self, db: AsyncSession):
@@ -34,6 +35,7 @@ class AuthService:
             email=email,
             hashed_password=hashed_password
         )
+        user.profile = UserProfile()
         create_user = await self.repository.create(user)
         await self.repository.db.commit()
         await self.repository.db.refresh(create_user)

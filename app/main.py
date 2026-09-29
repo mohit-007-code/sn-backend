@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
+
 from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.db.session import engine
@@ -19,6 +22,14 @@ app = FastAPI(
 app.include_router(
     api_router,
     prefix="/api/v1",
+)
+
+Path("uploads/profiles").mkdir(parents=True, exist_ok=True)
+
+app.mount(
+    "/uploads",
+    StaticFiles(directory="uploads"),
+    name="uploads",
 )
 
 @app.get("/health", tags=["Health"])

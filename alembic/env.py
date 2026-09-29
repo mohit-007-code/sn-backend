@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from app.core.config import get_settings
 from app.db.base import Base
 from app.modules.auth.models import User
+from app.modules.users.models import Follow, UserProfile
 
 
 # Alembic configuration
