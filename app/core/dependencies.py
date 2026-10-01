@@ -12,6 +12,7 @@ from app.core.security import verify_access_token
 from app.modules.auth.models import User
 
 security = HTTPBearer()
+security_optional = HTTPBearer(auto_error=False)
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security), db: AsyncSession = Depends(get_db)):
     token = credentials.credentials
@@ -47,3 +48,30 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         )
     
     return user
+
+
+async def get_current_user_optional(
+    credentials: HTTPAuthorizationCredentials | None = Depends(security_optional),
+    db: AsyncSession = Depends(get_db),
+) -> User | None:
+    if not credentials:
+        return None
+
+    try:
+        payload = verify_access_token(credentials.credentials)
+        user_id = UUID(payload["sub"])
+    except Exception:
+        return None
+
+    result = await db.execute(
+        select(User)
+        .options(selectinload(User.profile))
+        .where(User.id == user_id)
+    )
+
+    user = result.scalar_one_or_none()
+    if user is None or not user.is_active:
+        return None
+
+    return user
+

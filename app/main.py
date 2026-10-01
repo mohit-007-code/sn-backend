@@ -7,16 +7,18 @@ from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.db.session import engine
 from app.api.router import api_router
+from fastapi.middleware.cors import CORSMiddleware
 
 @asynccontextmanager
-async def liespan(app: FastAPI):
+async def lifespan(app: FastAPI):
     yield
     await engine.dispose()
 
 app = FastAPI(
-    title="Socail Platform API",
-    description="A Production-oriented social medai platform.",
+    title="Social Platform API",
+    description="A Production-oriented social media platform.",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 app.include_router(
@@ -25,11 +27,25 @@ app.include_router(
 )
 
 Path("uploads/profiles").mkdir(parents=True, exist_ok=True)
+Path("uploads/posts").mkdir(parents=True, exist_ok=True)
 
 app.mount(
     "/uploads",
     StaticFiles(directory="uploads"),
     name="uploads",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/health", tags=["Health"])

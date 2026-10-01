@@ -9,6 +9,10 @@ from app.core.config import get_settings
 from app.db.base import Base
 from app.modules.auth.models import User
 from app.modules.users.models import Follow, UserProfile
+from app.modules.posts.models import Post
+from app.modules.likes.models import Like
+from app.modules.comments.models import Comment
+
 
 
 # Alembic configuration

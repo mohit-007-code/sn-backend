@@ -27,3 +27,25 @@ class UserProfileUpdate(BaseModel):
     bio: str | None = None
     profile_photo_url: str | None = None
     banner_photo_url: str | None = None
+
+
+class FollowUserItem(BaseModel):
+    id: UUID
+    username: str
+    profile: UserProfileResponse | None = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class FollowResponse(BaseModel):
+    is_following: bool
+    follower_count: int
+    following_count: int
+
+
+class FollowUserListResponse(BaseModel):
+    items: list[FollowUserItem]
+    page: int
+    page_size: int
+    total: int
+    has_next: bool
