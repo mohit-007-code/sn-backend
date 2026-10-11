@@ -3,8 +3,9 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, get_current_user_optional
 from app.core.storage import save_image
+
 from app.db.session import get_db
 from app.modules.auth.models import User
 from app.modules.users.schemas import (
@@ -57,9 +58,17 @@ async def update_me( full_name: str | None = Form(None),
 
 
 @router.get("/{user_id}", response_model=UserPublicResponse)
-async def get_user_profile(user_id: UUID, db: AsyncSession = Depends(get_db)):
+async def get_user_profile(
+    user_id: UUID,
+    current_user: User | None = Depends(get_current_user_optional),
+    db: AsyncSession = Depends(get_db),
+):
     service = UserService(db)
-    return await service.get_public_profile(user_id)
+    return await service.get_public_profile(
+        target_user_id=user_id,
+        current_user_id=current_user.id if current_user else None,
+    )
+
 
 
 

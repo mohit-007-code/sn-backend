@@ -58,6 +58,8 @@ class UserPublicResponse(BaseModel):
     profile: UserProfileResponse | None = None
     follower_count: int = 0
     following_count: int = 0
+    is_following: bool = False
 
     model_config = ConfigDict(from_attributes=True)
+
 

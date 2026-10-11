@@ -97,7 +97,9 @@ class UserService:
             "has_next": has_next,
         }
 
-    async def get_public_profile(self, target_user_id: UUID) -> dict:
+    async def get_public_profile(
+        self, target_user_id: UUID, current_user_id: UUID | None = None
+    ) -> dict:
         target_user = await self.repository.get_by_id(target_user_id)
         if not target_user:
             raise HTTPException(
@@ -106,6 +108,12 @@ class UserService:
             )
         follower_count = await self.repository.count_followers(target_user_id)
         following_count = await self.repository.count_following(target_user_id)
+
+        is_following = False
+        if current_user_id and current_user_id != target_user_id:
+            existing = await self.repository.get_follow(current_user_id, target_user_id)
+            is_following = bool(existing)
+
         return {
             "id": target_user.id,
             "username": target_user.username,
@@ -113,5 +121,7 @@ class UserService:
             "profile": target_user.profile,
             "follower_count": follower_count,
             "following_count": following_count,
+            "is_following": is_following,
         }
+
 
