@@ -12,7 +12,9 @@ from app.modules.users.schemas import (
     FollowUserListResponse,
     UserMeResponse,
     UserProfileUpdate,
+    UserPublicResponse,
 )
+
 from app.modules.users.service import UserService
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -52,6 +54,13 @@ async def update_me( full_name: str | None = Form(None),
     await db.commit()
     await db.refresh(current_user)
     return current_user
+
+
+@router.get("/{user_id}", response_model=UserPublicResponse)
+async def get_user_profile(user_id: UUID, db: AsyncSession = Depends(get_db)):
+    service = UserService(db)
+    return await service.get_public_profile(user_id)
+
 
 
 @router.post("/{user_id}/follow", response_model=FollowResponse)

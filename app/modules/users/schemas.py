@@ -48,4 +48,16 @@ class FollowUserListResponse(BaseModel):
     page: int
     page_size: int
     total: int
-    has_next: bool
+    has_next: bool
+
+
+class UserPublicResponse(BaseModel):
+    id: UUID
+    username: str
+    created_at: datetime
+    profile: UserProfileResponse | None = None
+    follower_count: int = 0
+    following_count: int = 0
+
+    model_config = ConfigDict(from_attributes=True)
+

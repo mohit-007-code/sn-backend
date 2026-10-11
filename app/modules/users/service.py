@@ -96,3 +96,22 @@ class UserService:
             "total": total,
             "has_next": has_next,
         }
+
+    async def get_public_profile(self, target_user_id: UUID) -> dict:
+        target_user = await self.repository.get_by_id(target_user_id)
+        if not target_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found",
+            )
+        follower_count = await self.repository.count_followers(target_user_id)
+        following_count = await self.repository.count_following(target_user_id)
+        return {
+            "id": target_user.id,
+            "username": target_user.username,
+            "created_at": target_user.created_at,
+            "profile": target_user.profile,
+            "follower_count": follower_count,
+            "following_count": following_count,
+        }
+
