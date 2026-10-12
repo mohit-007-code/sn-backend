@@ -5,6 +5,7 @@ from app.modules.posts.router import router as post_router
 from app.modules.feed.router import router as feed_router
 from app.modules.likes.router import router as like_router
 from app.modules.comments.router import router as comment_router
+from app.modules.admin.router import router as admin_router
 
 
 api_router = APIRouter()
@@ -15,4 +16,5 @@ api_router.include_router(post_router)
 api_router.include_router(like_router)
 api_router.include_router(comment_router)
 api_router.include_router(feed_router)
+api_router.include_router(admin_router)
 

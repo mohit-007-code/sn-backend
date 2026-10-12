@@ -16,6 +16,7 @@ class UserMeResponse(BaseModel):
     id: UUID
     username: str
     email: EmailStr
+    role: str = "user"
     is_active: bool
     created_at: datetime
     profile: UserProfileResponse | None = None
